@@ -83,3 +83,12 @@ for(symbol in stock_symbols) {
     cat("Error calculating stats for ", symbol,":", conditionMessage(e), "\n\n")
   })
 }
+
+lst <- as.list.hash(scores)
+scores <- data.frame(stock=names(lst), score=as.numeric(lst))
+scores <- scores[order(scores$score, decreasing=TRUE),]
+
+cat("\nScores:\n")
+print(scores)
+
+save.image()
