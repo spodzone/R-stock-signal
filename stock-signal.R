@@ -64,3 +64,22 @@ for(symbol in stock_symbols) {
     cat("Error calculating stats for ", symbol,":", conditionMessage(e), "\n\n")
   })
 }
+
+cat("Calculating Scores\n")
+# scores are how buy-able the commodity is
+scores <- hash()
+for(symbol in stock_symbols) {
+  tryCatch({
+    r <- tail(normstats[[symbol]] ,1)
+    score <- (-r$bb15 - r$bb30) +
+      (-r$bb30 - r$bb90)/2. +
+      (-r$rsi15 - r$rsi30) +
+      (-r$rsi30 - r$rsi90)/2.
+    score <- score + sign(r$gradient15)*0.25
+    score <- score + sign(r$gradient30)*0.5
+    score <- score + sign(r$gradient90)*0.125
+    scores[[symbol]] <- score
+  }, error=function(e) {
+    cat("Error calculating stats for ", symbol,":", conditionMessage(e), "\n\n")
+  })
+}
